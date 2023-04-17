@@ -1,0 +1,128 @@
+micronaut:
+  application:
+    name: rrsBackendMic
+  executors:
+    io:
+      type: fixed
+      nThreads: 75
+  router:
+    folder:
+      dir-pattern: ${DIR_PATTERN:`/rrs-backend/storage/`}
+      files:
+        avatars: ${DIR_AVATARS:`files/avatars/`}
+        documents: ${DIR_DOCUMENTS:`files/documents/`}
+        post-photos: ${DIR_POST_PHOTOS:`files/post-photos/`}
+        secure-pictures: ${DIR_SECURE_PICTURES:`files/secure-photos/`}
+    static-resources:
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /swagger-ui/**
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      redoc:
+        paths: classpath:META-INF/swagger/views/redoc
+        mapping: /redoc/**
+      rapidoc:
+        paths: classpath:META-INF/swagger/views/rapidoc
+        mapping: /rapidoc/**
+  security:
+    enabled: true
+    authentication: bearer
+    intercept-url-map:
+      - pattern: /swagger/**
+        httpMethod: GET
+        access:
+          - isAnonymous()
+      - pattern: /swagger-ui/**
+        httpMethod: GET
+        access:
+          - isAnonymous()
+    endpoints:
+      login:
+        enabled: false
+      oauth:
+        enabled: false
+    token:
+      jwt:
+        enabled: true
+        cookie:
+          enabled: false
+        bearer:
+          enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne
+              jws-algorithm: HS256
+        generator:
+          access-token:
+            expiration: 10800
+            secret: pleaseChangeThisSecretForANewOne
+          refresh-token:
+            expiration: 20400
+            secret: ANewOne1234565434563575756757оапропоп
+  session:
+    http:
+      cookie: true
+      header: true
+  server:
+    port: ${PORT:8080}
+    idle-timeout: 10m
+    max-request-size: '100MB'
+    multipart:
+      enabled: true
+      max-file-size: '100MB'
+      threshold: '100MB'
+      mixed: true
+    cors:
+      enabled: true
+    ssl:
+      enabled: false
+      port: 443
+      build-self-signed: true
+
+datasources:
+  default:
+    url: ${JDBC_URL:`jdbc:postgresql://localhost:5432/contract-construction-service`}
+    username: ${JDBC_USER:vattghern}
+    password: ${JDBC_PASSWORD:12098734}
+    driverClassName: ${JDBC_DRIVER:org.postgresql.Driver}
+    maximum-pool-size: 15
+    idle-timeout: 30000
+
+endpoints:
+
+
+jpa:
+  default:
+    packages-to-scan:
+      - 'com.michael.entity'
+    properties:
+      hibernate:
+
+        generate_statistics: false
+#        generate_statistics: true
+        naming:
+          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        
+        enable_lazy_load_no_trans: true
+        hbm2ddl:
+          auto: none
+        show_sql: true
+#        show_sql: false
+        jdbc:
+          batch_size: 100
+        order_inserts: true
+jackson:
+  module-scan: true
+  bean-introspection-module: true
+  json-view:
+    enabled: true
+
+#google:
+#  mail:
+#    credentials:
+#      client-secret: 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
+#      client-id: 253836004947-1j3j55an1pekou5ue8hkjsbon019f7rj.apps.googleusercontent.com
