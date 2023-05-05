@@ -1,6 +1,6 @@
 package com.michael.service;
 
-import com.michael.entity.User;
+import com.michael.entity.jpa.User;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.scheduling.TaskScheduler;
 import jakarta.inject.Inject;

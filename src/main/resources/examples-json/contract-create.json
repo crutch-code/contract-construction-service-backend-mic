@@ -1,0 +1,17 @@
+{
+  "contract_category": {
+    "id": "4a7c1d88d4b32fc"
+  },
+  "contract_price": 123123,
+  "contract_title": "Заголовок до 30 чаров",
+  "contract_description": "ыфвафывадлфывоадывфрадфыворалофыалдоДЛО",
+  "contract_address": {
+    "country": "Россия",
+    "city": "Липецк",
+    "street": "Пушкина",
+    "build": 13,
+    "appart": 14,
+    "coord_x": 0,
+    "coord_y": 0
+  }
+}

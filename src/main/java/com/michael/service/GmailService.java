@@ -35,7 +35,7 @@ public class GmailService {
     private String dirPattern;
 
     @Inject
-    private ErrorService errorService;
+    private ResponseService responseService;
 
     @Value("${google.mail.credentials.client-secret}")
     private String secret;
@@ -52,7 +52,7 @@ public class GmailService {
     public Gmail instance(){
         if (instance == null) throw new InternalExceptionResponse(
                 "Gmail service isn't instantiate",
-                errorService.error("Gmail service isn't instantiate")
+                responseService.error("Gmail service isn't instantiate")
         );
         return instance;
     }
@@ -75,13 +75,13 @@ public class GmailService {
                         new FileDataStoreFactory(new File(dirPattern + "google-credentials"))
                 ).build(),
                 receiver
-        ).authorize("remote.rent.system.mail");
+        ).authorize("contract.construction.service.mail");
 
         instance = new Gmail.Builder(
                 new NetHttpTransport(),
                 JacksonFactory.getDefaultInstance(),
                 credential
-        ).setApplicationName("Remote Rent System").build();
+        ).setApplicationName("Contract Construction Service").build();
     }
 
 }

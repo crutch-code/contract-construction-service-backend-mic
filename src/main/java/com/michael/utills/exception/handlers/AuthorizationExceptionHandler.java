@@ -1,7 +1,7 @@
 package com.michael.utills.exception.handlers;
 
 
-import com.michael.service.ErrorService;
+import com.michael.service.ResponseService;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -19,9 +19,10 @@ import jakarta.inject.Singleton;
 @Replaces(AuthenticationExceptionHandler.class)
 public class AuthorizationExceptionHandler implements ExceptionHandler<AuthenticationException, MutableHttpResponse<?>> {
     @Inject
-    ErrorService errorService;
+    ResponseService responseService;
     @Override
     public MutableHttpResponse<?> handle(HttpRequest request, AuthenticationException exception) {
-        return HttpResponse.unauthorized().body(errorService.unauthorized(exception.getMessage()));
+        exception.printStackTrace();
+        return HttpResponse.unauthorized().body(responseService.unauthorized(exception.getMessage()));
     }
 }

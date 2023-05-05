@@ -26,7 +26,7 @@ public class CustomJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
     protected void populateWithAuthentication(JWTClaimsSet.Builder builder, Authentication authentication) {
         super.populateWithAuthentication(builder, authentication);
         builder.claim("uid", ((CustomAuthentication) authentication).getUid());
-        builder.claim("name", ((CustomAuthentication) authentication).getName());
+        builder.claim("name", authentication.getName());
         builder.claim("session", ((CustomAuthentication) authentication).getSessionUUID());
         builder.claim("roles",  authentication.getRoles());
         builder.claim("attributes", authentication.getAttributes());

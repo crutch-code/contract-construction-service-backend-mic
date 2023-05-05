@@ -1,6 +1,6 @@
 package com.michael.utills.security.events;
 
-import com.michael.entity.User;
+import com.michael.entity.jpa.User;
 import io.micronaut.context.event.ApplicationEvent;
 
 public class LogoutEvent extends ApplicationEvent {

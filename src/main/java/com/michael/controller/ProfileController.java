@@ -1,8 +1,9 @@
 package com.michael.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.michael.entity.User;
+import com.michael.entity.jpa.User;
 import com.michael.entity.jsonviews.Default;
+import com.michael.entity.jsonviews.JsonViewsCollector;
 import com.michael.entity.requests.profile.ChangePasswordRequest;
 import com.michael.entity.responses.DefaultAppResponse;
 import com.michael.entity.responses.exceptions.InternalExceptionResponse;
@@ -51,7 +52,7 @@ public class ProfileController extends BaseController{
     @Get(uri = "/infos", produces = MediaType.APPLICATION_JSON_STREAM)
     @SecurityRequirement(name = "BearerAuth")
     @Secured(SecurityRule.IS_AUTHENTICATED)
-    @JsonView(Default.class)
+    @JsonView(JsonViewsCollector.Users.WithAvatars.class)
     public User userLogged(){
         return getCurrentUser();
     }
@@ -69,10 +70,10 @@ public class ProfileController extends BaseController{
                     return HttpResponse.status(HttpStatus.FORBIDDEN).body(new DefaultAppResponse());
                 user.setUserPassword(request.getNewPassword());
                 userRepository.update(user);
-                return HttpResponse.ok(errorService.success("Success changed password"));
+                return HttpResponse.ok(responseService.success("Success changed password"));
         }catch (Exception ex){
             logger.error(ex.getMessage());
-            throw new InternalExceptionResponse(ex.getMessage(), errorService.error(ex.getMessage()));
+            throw new InternalExceptionResponse(ex.getMessage(), responseService.error(ex.getMessage()));
         }
     }
 
@@ -84,10 +85,10 @@ public class ProfileController extends BaseController{
 
     public HttpResponse<DefaultAppResponse> resetPassword(@Body ChangePasswordRequest request){
         try{
-            return HttpResponse.ok(errorService.toBeImplemented());
+            return HttpResponse.ok(responseService.toBeImplemented());
         }catch (Exception ex){
             logger.error(ex.getMessage());
-            throw new InternalExceptionResponse(ex.getMessage(), errorService.error(ex.getMessage()));
+            throw new InternalExceptionResponse(ex.getMessage(), responseService.error(ex.getMessage()));
         }
     }
 
@@ -99,12 +100,12 @@ public class ProfileController extends BaseController{
     public HttpResponse<DefaultAppResponse> changePhone(@QueryValue Optional<String> phone){
         try{
             User user = getCurrentUser();
-            user.setUserPhoneNumber(phone.orElseThrow());
+            user.setUserPhone(phone.orElseThrow());
             userRepository.update(user);
-            return HttpResponse.ok(errorService.success("phone has been changed"));
+            return HttpResponse.ok(responseService.success("phone has been changed"));
         }catch (Exception ex){
             logger.error(ex.getMessage());
-            throw new InternalExceptionResponse(ex.getMessage(), errorService.error(ex.getMessage()));
+            throw new InternalExceptionResponse(ex.getMessage(), responseService.error(ex.getMessage()));
         }
     }
 

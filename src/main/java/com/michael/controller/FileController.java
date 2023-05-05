@@ -1,7 +1,7 @@
 package com.michael.controller;
 
-import com.michael.entity.Files;
-import com.michael.entity.User;
+import com.michael.entity.jpa.Files;
+import com.michael.entity.jpa.User;
 import com.michael.entity.responses.DefaultAppResponse;
 import com.michael.entity.responses.exceptions.InternalExceptionResponse;
 import io.micronaut.http.HttpResponse;
@@ -54,10 +54,10 @@ public class FileController extends BaseController{
                 user.getAvatars().add(target);
             });
             userRepository.update(user);
-            return HttpResponse.ok(errorService.success("avatars uploaded successfully"));
+            return HttpResponse.ok(responseService.success("avatars uploaded successfully"));
         }catch (Exception ex){
             logger.error(ex.getMessage());
-            throw new InternalExceptionResponse(ex.getMessage(), errorService.error(ex.getMessage()));
+            throw new InternalExceptionResponse(ex.getMessage(), responseService.error(ex.getMessage()));
         }
     }
 
@@ -82,7 +82,7 @@ public class FileController extends BaseController{
 
         }catch (Exception ex){
             logger.error(ex.getMessage());
-            throw new InternalExceptionResponse(ex.getMessage(), errorService.error("Failed get avatar: " +ex.getMessage()));
+            throw new InternalExceptionResponse(ex.getMessage(), responseService.error("Failed get avatar: " +ex.getMessage()));
         }
     }
 
@@ -107,7 +107,7 @@ public class FileController extends BaseController{
 
         }catch (Exception ex){
             logger.error(ex.getMessage());
-            throw new InternalExceptionResponse(ex.getMessage(), errorService.error(ex.getMessage()));
+            throw new InternalExceptionResponse(ex.getMessage(), responseService.error(ex.getMessage()));
         }
     }
 }

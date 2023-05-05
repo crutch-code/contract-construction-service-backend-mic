@@ -7,12 +7,10 @@ micronaut:
       nThreads: 75
   router:
     folder:
-      dir-pattern: ${DIR_PATTERN:`/rrs-backend/storage/`}
+      dir-pattern: ${DIR_PATTERN:`/css-backend/storage/`}
       files:
         avatars: ${DIR_AVATARS:`files/avatars/`}
-        documents: ${DIR_DOCUMENTS:`files/documents/`}
-        post-photos: ${DIR_POST_PHOTOS:`files/post-photos/`}
-        secure-pictures: ${DIR_SECURE_PICTURES:`files/secure-photos/`}
+
     static-resources:
       swagger-ui:
         paths: classpath:META-INF/swagger/views/swagger-ui
@@ -81,6 +79,11 @@ micronaut:
       enabled: false
       port: 443
       build-self-signed: true
+  views:
+    thymeleaf:
+      enabled: true
+      suffix: .html
+    folder: html-templates/
 
 datasources:
   default:
@@ -97,7 +100,7 @@ endpoints:
 jpa:
   default:
     packages-to-scan:
-      - 'com.michael.entity'
+      - 'com.michael.entity.jpa'
     properties:
       hibernate:
 
@@ -121,8 +124,8 @@ jackson:
   json-view:
     enabled: true
 
-#google:
-#  mail:
-#    credentials:
-#      client-secret: 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
-#      client-id: 253836004947-1j3j55an1pekou5ue8hkjsbon019f7rj.apps.googleusercontent.com
+google:
+  mail:
+    credentials:
+      client-secret: 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
+      client-id: 1062448938353-foaup1miur2ffo28mfm796t0r07dis16.apps.googleusercontent.com

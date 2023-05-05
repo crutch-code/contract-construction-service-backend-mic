@@ -1,6 +1,6 @@
 package com.michael.utills.security;
 
-import com.michael.entity.User;
+import com.michael.entity.jpa.User;
 import com.michael.repository.UserRepository;
 import com.michael.utills.security.responses.CustomAuthResponse;
 import io.micronaut.http.HttpRequest;
@@ -11,6 +11,11 @@ import io.reactivex.rxjava3.core.Flowable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.reactivestreams.Publisher;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 
 @Singleton
@@ -24,14 +29,30 @@ public class AuthProviderUser implements AuthenticationProvider {
         User user =
                 userRepository.findByUserEmail(String.valueOf(authenticationRequest.getIdentity()))
                                 .orElse(
-                                        userRepository.findByUserPhoneNumber(String.valueOf(authenticationRequest.getIdentity())).orElse(null));
+                                        userRepository.findByUserPhone(String.valueOf(authenticationRequest.getIdentity())).orElse(null));
         if(user == null)
-            return Flowable.just(AuthenticationResponse.failure("User not found"));
+            return Flowable.just(AuthenticationResponse.failure("Пользователь с таким e-mail или номером телефона не найден"));
+
+        if(!user.getIsConfirm()){
+            return Flowable.just(AuthenticationResponse.failure("Пользователь не подтверждён"));
+        }
 
         if (!user.getUserPassword().equals(authenticationRequest.getSecret()))
-            return Flowable.just(AuthenticationResponse.failure("Incorrect Password"));
+            return Flowable.just(AuthenticationResponse.failure("Неправильный пароль"));
 
-        return Flowable.just(new CustomAuthResponse(user.getOid(), user.getUserName()));
+
+
+        return Flowable.just(
+                new CustomAuthResponse(
+                        user.getId(),
+                        user.getUserName(),
+                        List.of(
+                                user.getIsOperator() ? "IS_ADMIN": "DEFAULT_USER",
+                                user.getIsContractor()? "IS_CONTRACTOR" : "NOT_CONTRACTOR"
+                        ),
+                        UUID.randomUUID().toString()
+                )
+        );
     }
 
 

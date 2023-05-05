@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.michael.entity.responses.exceptions.InternalExceptionResponse;
 import com.michael.repository.UserRepository;
-import com.michael.service.ErrorService;
+import com.michael.service.ResponseService;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import io.micronaut.security.authentication.Authentication;
@@ -28,7 +28,7 @@ public class RefreshTokenHandler implements RefreshTokenPersistence {
     public static final Logger log = LoggerFactory.getLogger(RefreshTokenHandler.class);
 
     @Inject
-    ErrorService errorService;
+    ResponseService responseService;
 
     @Inject
     public UserRepository repository;
@@ -47,24 +47,14 @@ public class RefreshTokenHandler implements RefreshTokenPersistence {
             return Flowable.just(new CustomAuthentication(
                         jwt.getJWTClaimsSet().getStringClaim("uid"),
                         jwt.getJWTClaimsSet().getStringClaim("name"),
-                        om.readValue(jwt.getJWTClaimsSet().getClaim("roles").toString(), Collection.class),
+                        jwt.getJWTClaimsSet().getStringListClaim("roles"),
                         om.readValue(jwt.getJWTClaimsSet().getClaim("attributes").toString(), Map.class),
                         jwt.getJWTClaimsSet().getStringClaim("session")
                     )
             );
         }catch (Exception e){
-            throw new InternalExceptionResponse(errorService.error(e.getMessage()));
+            throw new InternalExceptionResponse(responseService.error(e.getMessage()));
         }
     }
 
-    @SneakyThrows
-    public String getUserName(String token) {
-        try {
-            JWT jwt = JWTParser.parse(token);
-            return jwt.getJWTClaimsSet().getStringClaim("login");
-
-        } catch (Exception e) {
-            throw new InternalExceptionResponse(errorService.error(e.getMessage()));
-        }
-    }
 }

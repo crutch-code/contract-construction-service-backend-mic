@@ -1,5 +1,6 @@
 package com.michael;
 
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.runtime.Micronaut;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.info.*;
@@ -13,9 +14,11 @@ import java.util.TimeZone;
         )
 )
 public class  Application {
+
+    public static ApplicationContext context;
     public static void main(String[] args)
     {
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Moscow"));
-        Micronaut.run(Application.class, args);
+        context = Micronaut.run(Application.class, args);
     }
 }

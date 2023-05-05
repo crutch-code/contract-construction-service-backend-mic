@@ -1,6 +1,6 @@
 package com.michael.service;
 
-import com.michael.entity.Files;
+import com.michael.entity.jpa.Files;
 import com.michael.repository.TransactionalRepository;
 import com.michael.utills.security.MD5Util;
 import io.micronaut.context.annotation.Value;
@@ -15,8 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 
 @Singleton
@@ -28,14 +26,9 @@ public class FilesService {
 
     @Value("${micronaut.router.folder.dir-pattern}")
     protected String dirPattern;
-    @Value("${micronaut.router.folder.files.post-photos}")
-    protected String postPhotos;
     @Value("${micronaut.router.folder.files.avatars}")
     protected String avatars;
-    @Value("${micronaut.router.folder.files.documents}")
-    protected String documents;
-    @Value("${micronaut.router.folder.files.secure-pictures}")
-    protected String securePhotos;
+
 
     public Files save(CompletedFileUpload file, String destination) throws IOException, NoSuchAlgorithmException {
         Path path = Path.of(destination + uniqueName(file.getFilename()));
@@ -43,8 +36,7 @@ public class FilesService {
         return new Files(
                 transactionalRepository.genOid().orElseThrow(),
                 path.toString().replace("\\", "/"),
-                Long.parseLong(String.valueOf(file.getSize())),
-                LocalDateTime.now(ZoneId.systemDefault())
+                Long.parseLong(String.valueOf(file.getSize()))
         );
     }
 
@@ -57,10 +49,7 @@ public class FilesService {
     public void initDirs(ApplicationStartupEvent e){
         Arrays.asList(
                 new File(dirPattern),
-                new File(dirPattern + avatars),
-                new File(dirPattern + postPhotos),
-                new File(dirPattern + documents),
-                new File(dirPattern + securePhotos)
+                new File(dirPattern + avatars)
         ).forEach(File::mkdirs);
     }
 
@@ -68,19 +57,9 @@ public class FilesService {
         return dirPattern;
     }
 
-    public String getPostPhotos() {
-        return postPhotos;
-    }
 
     public String getAvatars() {
         return avatars;
     }
 
-    public String getDocuments() {
-        return documents;
-    }
-
-    public String getSecurePhotos() {
-        return securePhotos;
-    }
 }

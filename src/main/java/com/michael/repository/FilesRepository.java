@@ -1,6 +1,6 @@
 package com.michael.repository;
 
-import com.michael.entity.Files;
+import com.michael.entity.jpa.Files;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.repository.CrudRepository;
 
